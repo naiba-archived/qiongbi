@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>穷逼</title>
+  <meta name="description" content="">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="icon" type="image/jpeg" href="/asset/images/default.jpg" />
+  <link rel="stylesheet" type="text/css" href="/asset/css/common.css" />
+  <script type="text/javascript" src="/asset/js/jquery.js"></script>
+  <script type="text/javascript" src="/asset/js/common.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1 class="logo"><img src="/asset/images/qiongbi.gif" class="logo-img"><span class="logo-txt">穷逼</span></h1>
+    <blockquote class="slogan">
+      <p>“我是穷逼，人穷志短的傻逼，我自卑，我虚荣；我没钱，没梦想；没朋友，没爱情，更没有尊严。”</p>
+      <p>“我穷困潦倒，我失意颓废，我人生一片灰暗。放下我卑贱的自尊，只求大爷您用金钱羞辱我，践踏我！”</p>
+    </blockquote>
+    <h2 class="alms-title">用金钱羞辱他</h2>
+    <form action="" method="post" class="alms-form">
+      <p class="field">
+        <label for="">大爷尊称</label>
+        <span class="ui-input">
+          <span class="inner">
+            <input name="username" id="username" class="input-txt" type="text" placeholder="一个好人">
+          </span>
+        </span>
+      </p>
+      <p class="field">
+        <label for="">您的邮箱</label>
+        <span class="ui-input">
+          <span class="inner">
+            <input name="email" id="email" class="input-txt" type="email" placeholder="help@me.com">
+          </span>
+        </span>
+        <span class="tips">以便与您取得联系</span>
+      </p>
+      <p class="field">
+        <label for="">羞辱他几句</label>
+        <span class="ui-input">
+          <span class="inner">
+            <textarea name="says" id="says" class="input-txt" id="" cols="60" rows="4"
+              placeholder="好习惯的养成，在于不受坏习惯的诱惑。"></textarea>
+          </span>
+        </span>
+      </p>
+      <p class="field field-group amounts">
+        <span class="amount first" data-amount="5">5<small class="currency">¥</small></span>
+        <span class="amount" data-amount="8.88">8.88<small class="currency">¥</small></span>
+        <span class="amount" data-amount="10">10<small class="currency">¥</small></span>
+        <span class="amount" data-amount="20">20<small class="currency">¥</small></span>
+        <span class="amount" data-amount="50">50<small class="currency">¥</small></span>
+        <span class="amount custom">
+          <span class="ui-input">
+            <span class="inner">
+              <input type="number" min="0.01" class="input-txt" id="customAmount" placeholder="其他金额">
+            </span>
+          </span>
+        </span>
+        <input type="hidden" name="amount" id="amount" value="5">
+      </p>
+      <p class="action"><button type="submit" class="btn-form"><span class="txt">践踏他的尊严</span></button></p>
+      <div class="aside summary">
+        <p>截至2019年9月共92人<br>羞辱过本穷逼的金钱共计<span class="donation">19,082.93 <small class="currency">¥</small></span></p>
+      </div>
+    </form>
+
+    <h2 class="alms-title alms-list-title">有钱就是爷</h2>
+    <div class="alms-list">
+      <ol class="list" role="main">
+        <li itemscope itemtype="http://schema.org/Person">
+          <p class='info'>
+            <img itemprop="photo" src='https://gravatar.com/avatar/c99587a1771773df78672d50208e7e2c/100'>
+            <span class='fn' itemprop="name">龙哥</span>于<time datetime='2018/4/13 15:49:26'>2018-04-13</time>向他捐赠<strong
+              class='sum'>1</strong>&yen;
+          </p>
+          <p class='says'><i class='qt-l'></i>该大爷默默的用金钱羞辱了穷逼，也不骂他两句。<i class='qt-r'></i>
+          </p>
+        </li>
+      </ol>
+      <p class="pages">
+        <span class='disabled'>&laquo; 上一页</span><span class='current'>1</span><a href='index905b.html?p=2'>2</a><a
+          href='index2207.html?p=3'>3</a><a href='index5c7e.html?p=4'>4</a><a href='index905b.html?p=2'>下一页 &raquo;</a>
+      </p>
+    </div>
+    <div class="aside about">
+      <p>本站自卑的使用了全球<br>最落伍的程序语言开发<br><img src="/asset/images/go-logo-blue.svg" alt="" height="20"></p>
+      <p class="statement">本站LOGO原型来自于网络<br>LOGO字体版权归造字工坊</p>
+
+      <p class="copyright">&copy;&nbsp;2019&nbsp;穷逼</p>
+    </div>
+  </div>
+
+  <div class="hide-clip">
+    <!-- 可放统计脚本 -->
+  </div>
+
+  <script>
+    var xhr = new XMLHttpRequest();
+    xhr.open('get', 'https://v1.hitokoto.cn');
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        var data = JSON.parse(xhr.responseText);
+        var hitokoto = document.getElementById('says');
+        hitokoto.setAttribute('placeholder', data.hitokoto);
+      }
+    }
+    xhr.send();
+  </script>
+</body>
+
+</html>
