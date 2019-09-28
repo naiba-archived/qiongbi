@@ -6,8 +6,10 @@ services:
      volumes:
        - ./data/:/qiongbi/data
      restart: always
+     ports:
+       - "172.17.0.1:8001:8080"
      environment:
-       AppID: qiongbi
-       PubKey: xxxxxx
-       PriKey: xxxxxx
-       Domain: example.com
+       - AppID=qiongbi
+       - PubKey=xxxxxx
+       - PriKey=xxxxxx
+       - Domain=example.com

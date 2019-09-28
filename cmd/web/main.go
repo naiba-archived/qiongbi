@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -25,6 +26,7 @@ func init() {
 	}
 	db.AutoMigrate(model.Trade{})
 	pay = alipay.New(os.Getenv("AppID"), os.Getenv("PubKey"), os.Getenv("PriKey"), true)
+	log.Println("load alipay conig", os.Getenv("AppID"), os.Getenv("PubKey"), os.Getenv("PriKey"))
 }
 
 func main() {
@@ -54,23 +56,23 @@ func onReturn(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusOK, "/")
+	c.Redirect(http.StatusFound, "/")
 }
 
 func donate(c *gin.Context) {
 	var dr donateReq
 	if err := c.ShouldBind(&dr); err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+		c.String(http.StatusBadRequest, "输入有误："+err.Error())
 		return
 	}
 
 	amt, err := decimal.NewFromString(dr.Amount)
 	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+		c.String(http.StatusBadRequest, "金额有误："+err.Error())
 		return
 	}
 	if amt.LessThan(decimal.NewFromFloat(0.01)) {
-		c.String(http.StatusBadRequest, "数额太小")
+		c.String(http.StatusBadRequest, "金额太小")
 		return
 	}
 
@@ -78,20 +80,24 @@ func donate(c *gin.Context) {
 	t.Name = dr.Name
 	t.Email = dr.Email
 	t.Amount = dr.Amount
-	db.Create(t)
 
-	var p = alipay.AliPayTradeWapPay{}
+	if err := db.Create(&t).Error; err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	var p = alipay.AliPayTradePagePay{}
 	p.NotifyURL = "https://" + os.Getenv("Domain") + "/notify"
 	p.ReturnURL = "https://" + os.Getenv("Domain") + "/return"
 	p.Subject = t.Name + "-捐助-" + t.Amount
 	p.OutTradeNo = fmt.Sprintf("%d", t.ID)
 	p.TotalAmount = t.Amount
-	u, err := pay.TradeWapPay(p)
+	u, err := pay.TradePagePay(p)
 	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+		c.String(http.StatusBadRequest, "网关错误："+err.Error())
 		return
 	}
-	c.Redirect(http.StatusOK, u.String())
+	c.Redirect(http.StatusFound, u.String())
 }
 
 func notify(c *gin.Context) {
