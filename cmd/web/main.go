@@ -1,12 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/shopspring/decimal"
 	"github.com/smartwalle/alipay"
 
 	"github.com/naiba/qiongbi/model"
@@ -33,14 +35,26 @@ func main() {
 	})
 	engine.POST("/notify", notify)
 	engine.POST("/donate", donate)
+	engine.GET("/return", onReturn)
 	engine.Run(":8080")
 }
 
 type donateReq struct {
 	Name   string `json:"name,omitempty" form:"name" binding:"required,max=12"`
 	Email  string `json:"email,omitempty" form:"email" binding:"required,email"`
-	Amount string `json:"amount,omitempty" form:"amount" binding:"required,numeric,min=0.01,max=9999"`
+	Amount string `json:"amount,omitempty" form:"amount" binding:"required"`
 	Note   string `json:"note,omitempty" form:"note" binding:"max=255"`
+}
+
+func onReturn(c *gin.Context) {
+	c.Request.ParseForm()
+	_, err := pay.VerifySign(c.Request.Form)
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.Redirect(http.StatusOK, "/")
 }
 
 func donate(c *gin.Context) {
@@ -49,6 +63,35 @@ func donate(c *gin.Context) {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
+
+	amt, err := decimal.NewFromString(dr.Amount)
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+	if amt.LessThan(decimal.NewFromFloat(0.01)) {
+		c.String(http.StatusBadRequest, "数额太小")
+		return
+	}
+
+	var t model.Trade
+	t.Name = dr.Name
+	t.Email = dr.Email
+	t.Amount = dr.Amount
+	db.Create(t)
+
+	var p = alipay.AliPayTradeWapPay{}
+	p.NotifyURL = "https://" + os.Getenv("Domain") + "/notify"
+	p.ReturnURL = "https://" + os.Getenv("Domain") + "/return"
+	p.Subject = t.Name + "-捐助-" + t.Amount
+	p.OutTradeNo = fmt.Sprintf("%d", t.ID)
+	p.TotalAmount = t.Amount
+	u, err := pay.TradeWapPay(p)
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+	c.Redirect(http.StatusOK, u.String())
 }
 
 func notify(c *gin.Context) {

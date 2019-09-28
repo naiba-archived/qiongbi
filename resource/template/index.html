@@ -25,12 +25,12 @@
       <p>“我穷困潦倒，我失意颓废，我人生一片灰暗。放下我卑贱的自尊，只求大爷您用金钱羞辱我，践踏我！”</p>
     </blockquote>
     <h2 class="alms-title">用金钱羞辱他</h2>
-    <form action="" method="post" class="alms-form">
+    <form name="donateForm" action="/donate" onsubmit="return checkSubmit()" method="post" class="alms-form">
       <p class="field">
         <label for="">大爷尊称</label>
         <span class="ui-input">
           <span class="inner">
-            <input name="username" id="username" class="input-txt" type="text" placeholder="一个好人">
+            <input name="name" id="name" class="input-txt" type="text" placeholder="一个好人">
           </span>
         </span>
       </p>
@@ -53,7 +53,7 @@
         </span>
       </p>
       <p class="field field-group amounts">
-        <span class="amount first" data-amount="5">5<small class="currency">¥</small></span>
+        <span class="amount first checked" data-amount="5">5<small class="currency">¥</small></span>
         <span class="amount" data-amount="8.88">8.88<small class="currency">¥</small></span>
         <span class="amount" data-amount="10">10<small class="currency">¥</small></span>
         <span class="amount" data-amount="20">20<small class="currency">¥</small></span>

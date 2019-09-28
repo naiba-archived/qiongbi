@@ -1,5 +1,5 @@
 $(function () {
-  
+
   $("#email").change(function () {
     var reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,20}$/;
     var email = $(this).val()
@@ -25,6 +25,27 @@ $(function () {
   }).bind("paste", function () { $(this).val($(this).val()) })
 
 })
+
+function checkSubmit() {
+  let flag = false
+  if (!$("input#name").val()) {
+    showmsg("做好事请留名", 'error')
+    return flag
+  }
+
+  if (!$("input#email").val()) {
+    showmsg("请输入正确的邮箱", 'error')
+    return flag
+  }
+
+  if ($("input#amount").val() < 0.01) {
+    showmsg("请发发善心，多捐点吧", 'error')
+    return flag
+  }
+
+  flag = true
+  return flag
+}
 
 function showmsg(msg, type) {
   msgstr = '<div class="msg-wrap"><div class="msg"><span class="ico">'
