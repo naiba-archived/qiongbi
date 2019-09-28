@@ -2,12 +2,11 @@ FROM golang:alpine AS binarybuilder
 WORKDIR /qiongbi
 ARG GATEWAY=openapi.alipay.com/gateway.do
 COPY . .
-RUN apk --no-cache --no-progress add git gcc \
+RUN apk --no-cache --no-progress add --virtual build-deps build-base git linux-pam-dev \
     && go mod vendor \
     && go mod tidy \
     # 修改支付宝网关
     && grep openapi.alipay.com -rl ./vendor/github.com/smartwalle/alipay|xargs sed -e "s~openapi.alipay.com/gateway.do~${GATEWAY}~g" \
-    && cat ./vendor/github.com/smartwalle/alipay/alipay.go\
     && cd cmd/web \
     && go build -o app -ldflags="-s -w"
 FROM alpine:latest
