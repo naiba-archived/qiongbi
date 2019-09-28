@@ -6,9 +6,9 @@ RUN apk --no-cache --no-progress add git\
     && go mod vendor \
     && go mod tidy \
     # 修改支付宝网关
-    && grep openapi.alipay.com -rl ./vendor/github.com/smartwalle/alipay|xargs sed -e "s/openapi\.alipay\.com\/gateway\.do/${GATEWAY}/g" \
+    && grep openapi.alipay.com -rl ./vendor/github.com/smartwalle/alipay|xargs sed -e "s~openapi.alipay.com/gateway.do~${GATEWAY}~g" \
     # 修改支付宝公钥
-    && grep isProduction\ ==\ false -rl ./vendor/github.com/smartwalle/alipay|xargs sed -e "s/>\ 0\ &&\ isProduction\ ==\ false//g" \
+    && grep isProduction\ ==\ false -rl ./vendor/github.com/smartwalle/alipay|xargs sed -e "s~>\ 0\ &&\ isProduction\ ==\ false~~g" \
     && cat ./vendor/github.com/smartwalle/alipay/alipay.go\
     && cat ./vendor/github.com/smartwalle/alipay/trade.go\
     && cd cmd/web \
