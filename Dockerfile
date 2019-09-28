@@ -5,7 +5,7 @@ COPY . .
 RUN apk --no-cache --no-progress add git\
     && go mod vendor \
     && go mod tidy \
-    && sed -i "s/openapi.alipay.com\/gateway.do/${GATEWAY}/g" grep openapi.alipay.com -rl ./vendor/github.com/smartwalle/alipay \
+    && grep openapi.alipay.com -rl ./vendor/github.com/smartwalle/alipay|xargs sed -e "s/openapi.alipay.com\/gateway.do/${GATEWAY}/g" \
     && cd cmd/web \
     && go build -o app -ldflags="-s -w"
 FROM alpine:latest
