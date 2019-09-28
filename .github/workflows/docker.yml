@@ -3,11 +3,11 @@ name: Build Docker Image
 on: [push]
 
 jobs:
-  deploy:
+  build-step:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: docker push
+      - name: docker build & push
         env:
           DockerPassword: ${{ secrets.PACKAGE_TOKEN }}
         run: |
