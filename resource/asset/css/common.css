@@ -379,18 +379,18 @@
     text-align: center;
   }
 
-  .pages span,
+  .pages li,
   .pages a {
     display: inline-block;
     padding: 0 10px;
     font: 700 14px/40px tahoma;
   }
 
-  .pages .disabled {
+  .pages .no-prev,.pages .no-next {
     color: #999;
   }
 
-  .pages .current {
+  .pages .page-active {
     color: #d00;
   }
 

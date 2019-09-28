@@ -14,6 +14,7 @@
   <link rel="stylesheet" type="text/css" href="/asset/css/common.css" />
   <script type="text/javascript" src="/asset/js/jquery.js"></script>
   <script type="text/javascript" src="/asset/js/common.js"></script>
+  <script type="text/javascript" src="/asset/js/sample-pagination.js"></script>
 </head>
 
 <body>
@@ -86,8 +87,6 @@
         </li>
       </ol>
       <p class="pages">
-        <span class='disabled'>&laquo; 上一页</span><span class='current'>1</span><a href='index905b.html?p=2'>2</a><a
-          href='index2207.html?p=3'>3</a><a href='index5c7e.html?p=4'>4</a><a href='index905b.html?p=2'>下一页 &raquo;</a>
       </p>
     </div>
     <div class="aside about">
@@ -103,6 +102,7 @@
   </div>
 
   <script>
+    // 一言
     var xhr = new XMLHttpRequest();
     xhr.open('get', 'https://v1.hitokoto.cn');
     xhr.onreadystatechange = function () {
@@ -113,6 +113,13 @@
       }
     }
     xhr.send();
+    // 分页
+    const slp = new SimplePagination(12)
+    slp.init({
+      container: '.pages',
+      maxShowBtnCount: 3,
+      onPageChange: state => { console.log('pagination change:', state.pageNumber) }
+    })
   </script>
 </body>
 
