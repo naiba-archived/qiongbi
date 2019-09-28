@@ -14,7 +14,7 @@ $(function () {
 
   $(".amount").click(function () {
     $(this).addClass("checked").siblings().removeClass("checked")
-    $("#customAmount").val(0)
+    $("#customAmount").val(1)
     $("#amount").val($(this).data("amount"))
   })
 
@@ -38,8 +38,8 @@ function checkSubmit() {
     return flag
   }
 
-  if ($("input#amount").val() < 0.01) {
-    showmsg("请发发善心，多捐点吧", 'error')
+  if ($("input#amount").val() < 1) {
+    showmsg("请多捐点吧", 'error')
     return flag
   }
 
