@@ -1,0 +1,13 @@
+version: '3.3'
+
+services:
+   db:
+     image: docker.pkg.github.com/naiba/qiongbi/web:latest
+     volumes:
+       - ./data/:/qiongbi/data
+     restart: always
+     environment:
+       AppID: qiongbi
+       PubKey: xxxxxx
+       PriKey: xxxxxx
+       Domain: example.com
