@@ -1,5 +1,17 @@
 $(function () {
 
+  // 一言
+  var xhr = new XMLHttpRequest();
+  xhr.open('get', 'https://v1.hitokoto.cn');
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+      var data = JSON.parse(xhr.responseText);
+      var hitokoto = document.getElementById('says');
+      hitokoto.setAttribute('placeholder', data.hitokoto);
+    }
+  }
+  xhr.send();
+
   $("#email").change(function () {
     var reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,20}$/;
     var email = $(this).val()

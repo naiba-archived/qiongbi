@@ -11,10 +11,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <link rel="icon" type="image/jpeg" href="/asset/images/default.jpg" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@4.0.1/reset.min.css">
   <link rel="stylesheet" type="text/css" href="/asset/css/common.css" />
   <script type="text/javascript" src="/asset/js/jquery.js"></script>
   <script type="text/javascript" src="/asset/js/common.js"></script>
-  <script type="text/javascript" src="/asset/js/sample-pagination.js"></script>
+  <script type="text/javascript" src="/asset/js/jquery.simplePagination.js"></script>
 </head>
 
 <body>
@@ -69,22 +70,27 @@
       </p>
       <p class="action"><button type="submit" class="btn-form"><span class="txt">践踏他的尊严</span></button></p>
       <div class="aside summary">
-        <p>截至2019年9月共92人<br>羞辱过本穷逼的金钱共计<span class="donation">19,082.93 <small class="currency">¥</small></span></p>
+        <p>截至{{.now}}共{{.totalNum}}人<br>羞辱过本穷逼的金钱共计<span class="donation">{{.sum}} <small
+              class="currency">¥</small></span>
+        </p>
       </div>
     </form>
 
     <h2 class="alms-title alms-list-title">有钱就是爷</h2>
     <div class="alms-list">
       <ol class="list" role="main">
+        {{range .trades}}
         <li itemscope itemtype="http://schema.org/Person">
           <p class='info'>
-            <img itemprop="photo" src='https://gravatar.com/avatar/c99587a1771773df78672d50208e7e2c/100'>
-            <span class='fn' itemprop="name">龙哥</span>于<time datetime='2018/4/13 15:49:26'>2018-04-13</time>向他捐赠<strong
-              class='sum'>1</strong>&yen;
+            <img itemprop="photo" src='https://gravatar.com/avatar/{{.Email|md5}}/100'>
+            <span class='fn' itemprop="name">{{.Name}}</span>于<time
+              datetime='{{.UpdatedAt|ft}}'>{{.UpdatedAt|ft}}</time>向他捐赠<strong class='sum'>{{.Amount}}</strong>&yen;
           </p>
-          <p class='says'><i class='qt-l'></i>该大爷默默的用金钱羞辱了穷逼，也不骂他两句。<i class='qt-r'></i>
+          <p class='says'><i class='qt-l'></i>{{if .Note}}{{.Note}}{{else}}该大爷默默的用金钱羞辱了穷逼，也不骂他两句。{{end}}<i
+              class='qt-r'></i>
           </p>
         </li>
+        {{end}}
       </ol>
       <p class="pages">
       </p>
@@ -102,24 +108,16 @@
   </div>
 
   <script>
-    // 一言
-    var xhr = new XMLHttpRequest();
-    xhr.open('get', 'https://v1.hitokoto.cn');
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        var data = JSON.parse(xhr.responseText);
-        var hitokoto = document.getElementById('says');
-        hitokoto.setAttribute('placeholder', data.hitokoto);
-      }
-    }
-    xhr.send();
-    // 分页
-    const slp = new SimplePagination(12)
-    slp.init({
-      container: '.pages',
-      maxShowBtnCount: 3,
-      onPageChange: state => { console.log('pagination change:', state.pageNumber) }
-    })
+    $(".pages").pagination({
+      items: parseInt('{{.totalPage}}'),
+      itemsOnPage: parseInt('{{.totalPage}}') > 10 ? parseInt('{{.totalPage}}') : undefined,
+      currentPage: parseInt('{{.currentPage}}'),
+      prevText: '上一页',
+      nextText: '下一页',
+      onPageClick: (pageNumber, ev) => {
+        window.location.href = '/?page=' + pageNumber
+      },
+    });
   </script>
 </body>
 

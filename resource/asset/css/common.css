@@ -382,15 +382,15 @@
   .pages li,
   .pages a {
     display: inline-block;
-    padding: 0 10px;
+    padding: 0 10px !important;
     font: 700 14px/40px tahoma;
   }
 
-  .pages .no-prev,.pages .no-next {
+  .pages .disabled {
     color: #999;
   }
 
-  .pages .page-active {
+  .pages .active {
     color: #d00;
   }
 

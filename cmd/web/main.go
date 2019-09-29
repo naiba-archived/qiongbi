@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -12,6 +15,7 @@ import (
 	"github.com/shopspring/decimal"
 	"github.com/smartwalle/alipay"
 
+	"github.com/naiba/com"
 	"github.com/naiba/qiongbi/model"
 )
 
@@ -24,6 +28,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	db = db.Debug()
 	db.AutoMigrate(model.Trade{})
 	pay = alipay.New(os.Getenv("AppID"), os.Getenv("PubKey"), os.Getenv("PriKey"), true)
 	log.Println("load alipay conig", os.Getenv("AppID"), os.Getenv("PubKey"), os.Getenv("PriKey"))
@@ -31,10 +36,15 @@ func init() {
 
 func main() {
 	engine := gin.Default()
-	engine.Static("/asset", "resource/asset")
-	engine.GET("/", func(c *gin.Context) {
-		c.File("resource/template/index.html")
+	engine.SetFuncMap(template.FuncMap{
+		"md5": com.MD5,
+		"ft": func(t time.Time) string {
+			return t.Format("2006-01-02 15:04")
+		},
 	})
+	engine.Static("/asset", "resource/asset")
+	engine.LoadHTMLGlob("resource/template/*")
+	engine.GET("/", home)
 	engine.POST("/notify", notify)
 	engine.POST("/donate", donate)
 	engine.GET("/return", onReturn)
@@ -79,7 +89,7 @@ func donate(c *gin.Context) {
 	var t model.Trade
 	t.Name = dr.Name
 	t.Email = dr.Email
-	t.Amount = dr.Amount
+	t.Amount = amt
 
 	if err := db.Create(&t).Error; err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -89,9 +99,9 @@ func donate(c *gin.Context) {
 	var p = alipay.AliPayTradePagePay{}
 	p.NotifyURL = "https://" + os.Getenv("Domain") + "/notify"
 	p.ReturnURL = "https://" + os.Getenv("Domain") + "/return"
-	p.Subject = t.Name + "-捐助-" + t.Amount
+	p.Subject = t.Name + "捐赠" + t.Amount.String()
 	p.OutTradeNo = fmt.Sprintf("%d", t.ID)
-	p.TotalAmount = t.Amount
+	p.TotalAmount = t.Amount.String()
 	u, err := pay.TradePagePay(p)
 	if err != nil {
 		c.String(http.StatusBadRequest, "网关错误："+err.Error())
@@ -123,4 +133,45 @@ func notify(c *gin.Context) {
 	}
 
 	pay.AckNotification(c.Writer)
+}
+
+const pageSize = 8
+
+type sumResult struct {
+	Amt decimal.Decimal
+}
+
+func home(c *gin.Context) {
+	pageStr := c.Query("page")
+	page, _ := strconv.Atoi(pageStr)
+	if page == 1 {
+		page = 0
+	}
+
+	var totalPage, totalNum int
+	db.Table("trades").Where("paid = ?", true).Count(&totalNum)
+	totalPage = totalNum / pageSize
+
+	var ts []model.Trade
+	db.Where("paid = ?", true).Limit(pageSize).Offset(page * pageSize).Find(&ts)
+	var all sumResult
+	db.Table("trades").Select("sum(amount) as amt").Where("paid = ?", true).Scan(&all)
+
+	now := time.Now().Format("2006年1月")
+
+	if page == 0 {
+		page = 1
+	}
+	if totalPage == 0 {
+		totalPage = 1
+	}
+
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"now":         now,
+		"totalNum":    totalNum,
+		"sum":         all.Amt,
+		"trades":      ts,
+		"totalPage":   totalPage,
+		"currentPage": page,
+	})
 }
