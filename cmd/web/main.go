@@ -118,15 +118,13 @@ func notify(c *gin.Context) {
 	}
 
 	var t model.Trade
-
 	if err := db.First(&t, "id = ?", n.OutTradeNo).Error; err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	if n.TradeStatus == alipay.K_TRADE_STATUS_TRADE_SUCCESS {
-		t.Paid = true
-		if err := db.Save(&t).Error; err != nil {
+		if err := db.Model(&t).Update("paid", true).Error; err != nil {
 			c.String(http.StatusInternalServerError, err.Error())
 			return
 		}
