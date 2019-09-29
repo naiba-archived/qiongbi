@@ -8,8 +8,7 @@ RUN apk --no-cache --no-progress add --virtual build-deps build-base git linux-p
     # 修改支付宝网关
     && grep openapi.alipay.com -rl ./vendor/github.com/smartwalle/alipay|xargs sed -i "s~openapi.alipay.com/gateway.do~${GATEWAY}~g" \
     && grep ${GATEWAY} -rl ./vendor/github.com/smartwalle/alipay \
-    && grep openapi.alipay.com -rl ./vendor/github.com/smartwalle/alipay|xargs cat \
-    && go build -o app -ldflags="-s -w" cmd/web/main.go
+    && go build -mod=vendor -o app -ldflags="-s -w" cmd/web/main.go
 FROM alpine:latest
 RUN apk --no-cache --no-progress add \
     ca-certificates \
