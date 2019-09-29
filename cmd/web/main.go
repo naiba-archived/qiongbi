@@ -51,13 +51,6 @@ func main() {
 	engine.Run(":8080")
 }
 
-type donateReq struct {
-	Name   string `json:"name,omitempty" form:"name" binding:"required,max=12"`
-	Email  string `json:"email,omitempty" form:"email" binding:"required,email"`
-	Amount string `json:"amount,omitempty" form:"amount" binding:"required"`
-	Note   string `json:"note,omitempty" form:"note" binding:"max=255"`
-}
-
 func onReturn(c *gin.Context) {
 	c.Request.ParseForm()
 	_, err := pay.VerifySign(c.Request.Form)
@@ -67,6 +60,13 @@ func onReturn(c *gin.Context) {
 	}
 
 	c.Redirect(http.StatusFound, "/")
+}
+
+type donateReq struct {
+	Name   string `json:"name,omitempty" form:"name" binding:"required,max=12"`
+	Email  string `json:"email,omitempty" form:"email" binding:"required,email"`
+	Amount string `json:"amount,omitempty" form:"amount" binding:"required"`
+	Note   string `json:"note,omitempty" form:"note" binding:"max=255"`
 }
 
 func donate(c *gin.Context) {
@@ -89,7 +89,8 @@ func donate(c *gin.Context) {
 	var t model.Trade
 	t.Name = dr.Name
 	t.Email = dr.Email
-	t.Amount = amt
+	t.Amount = amt.String()
+	t.Note = dr.Note
 
 	if err := db.Create(&t).Error; err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -99,9 +100,9 @@ func donate(c *gin.Context) {
 	var p = alipay.AliPayTradePagePay{}
 	p.NotifyURL = "https://" + os.Getenv("Domain") + "/notify"
 	p.ReturnURL = "https://" + os.Getenv("Domain") + "/return"
-	p.Subject = t.Name + "捐赠" + t.Amount.String()
+	p.Subject = t.Name + "捐赠" + t.Amount
 	p.OutTradeNo = fmt.Sprintf("%d", t.ID)
-	p.TotalAmount = t.Amount.String()
+	p.TotalAmount = t.Amount
 	u, err := pay.TradePagePay(p)
 	if err != nil {
 		c.String(http.StatusBadRequest, "网关错误："+err.Error())

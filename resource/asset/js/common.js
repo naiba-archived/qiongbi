@@ -6,7 +6,7 @@ $(function () {
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4) {
       var data = JSON.parse(xhr.responseText);
-      var hitokoto = document.getElementById('says');
+      var hitokoto = document.getElementById('note');
       hitokoto.setAttribute('placeholder', data.hitokoto);
     }
   }
