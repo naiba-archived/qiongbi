@@ -151,7 +151,7 @@ func home(c *gin.Context) {
 	totalPage = totalNum / pageSize
 
 	var ts []model.Trade
-	db.Where("paid = ?", true).Limit(pageSize).Offset(page * pageSize).Find(&ts)
+	db.Where("paid = ?", true).Order("id DESC", true).Limit(pageSize).Offset(page * pageSize).Find(&ts)
 	var all sumResult
 	db.Table("trades").Select("sum(amount) as amt").Where("paid = ?", true).Scan(&all)
 
