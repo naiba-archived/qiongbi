@@ -21,9 +21,14 @@ import (
 
 var db *gorm.DB
 var pay *alipay.AliPay
+var loc *time.Location
 
 func init() {
 	var err error
+	loc, err = time.LoadLocation("Asia/Shanghai")
+	if err != nil {
+		panic(err)
+	}
 	db, err = gorm.Open("sqlite3", "data/qiongbi.db")
 	if err != nil {
 		panic(err)
@@ -39,7 +44,7 @@ func main() {
 	engine.SetFuncMap(template.FuncMap{
 		"md5": com.MD5,
 		"ft": func(t time.Time) string {
-			return t.Format("2006-01-02 15:04")
+			return t.In(loc).Format("2006-01-02 15:04")
 		},
 	})
 	engine.Static("/asset", "resource/asset")
@@ -134,7 +139,7 @@ func notify(c *gin.Context) {
 	pay.AckNotification(c.Writer)
 }
 
-const pageSize = 8
+const pageSize = 5
 
 type sumResult struct {
 	Amt decimal.Decimal
