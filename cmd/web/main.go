@@ -148,8 +148,8 @@ type sumResult struct {
 func home(c *gin.Context) {
 	pageStr := c.Query("page")
 	page, _ := strconv.Atoi(pageStr)
-	if page == 1 {
-		page = 0
+	if page > 0 {
+		page--
 	}
 
 	var totalPage, totalNum int
@@ -160,7 +160,7 @@ func home(c *gin.Context) {
 	}
 
 	var ts []model.Trade
-	db.Where("paid = ?", true).Order("id DESC", true).Limit(pageSize).Offset(page*pageSize - 1).Find(&ts)
+	db.Where("paid = ?", true).Order("id DESC", true).Limit(pageSize).Offset(page * pageSize).Find(&ts)
 	var all sumResult
 	db.Table("trades").Select("sum(amount) as amt").Where("paid = ?", true).Scan(&all)
 

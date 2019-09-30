@@ -109,8 +109,7 @@
 
   <script>
     $(".pages").pagination({
-      items: 11,
-      // items: parseInt('{{.totalPage}}'),
+      items: parseInt('{{.totalPage}}'),
       itemsOnPage: parseInt('{{.totalPage}}') > 10 ? parseInt('{{.totalPage}}') : undefined,
       currentPage: parseInt('{{.currentPage}}'),
       prevText: '上一页',
