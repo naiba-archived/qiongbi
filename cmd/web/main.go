@@ -160,7 +160,7 @@ func home(c *gin.Context) {
 	}
 
 	var ts []model.Trade
-	db.Where("paid = ?", true).Order("id DESC", true).Limit(pageSize).Offset(page * pageSize).Find(&ts)
+	db.Where("paid = ?", true).Order("id DESC", true).Limit(pageSize).Offset(page*pageSize - 1).Find(&ts)
 	var all sumResult
 	db.Table("trades").Select("sum(amount) as amt").Where("paid = ?", true).Scan(&all)
 
