@@ -155,6 +155,9 @@ func home(c *gin.Context) {
 	var totalPage, totalNum int
 	db.Table("trades").Where("paid = ?", true).Count(&totalNum)
 	totalPage = totalNum / pageSize
+	if totalNum-totalPage*pageSize > 0 {
+		totalPage++
+	}
 
 	var ts []model.Trade
 	db.Where("paid = ?", true).Order("id DESC", true).Limit(pageSize).Offset(page * pageSize).Find(&ts)
