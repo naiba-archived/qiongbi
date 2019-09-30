@@ -170,7 +170,7 @@ func home(c *gin.Context) {
 		page = 1
 	}
 	if totalPage == 0 {
-		totalPage = 1
+		totalPage++
 	}
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
