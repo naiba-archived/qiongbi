@@ -387,11 +387,11 @@
   }
 
   .pages .disabled {
-    color: #999;
+    color: #999 !important;
   }
 
   .pages .active {
-    color: #d00;
+    color: #d00 !important;
   }
 
   .aside {

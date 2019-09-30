@@ -109,10 +109,12 @@
 
   <script>
     $(".pages").pagination({
-      items: parseInt('{{.totalPage}}'),
+      items: 11,
+      // items: parseInt('{{.totalPage}}'),
       itemsOnPage: parseInt('{{.totalPage}}') > 10 ? parseInt('{{.totalPage}}') : undefined,
       currentPage: parseInt('{{.currentPage}}'),
       prevText: '上一页',
+      useAnchors: false,
       nextText: '下一页',
       onPageClick: (pageNumber, ev) => {
         window.location.href = '/?page=' + pageNumber
