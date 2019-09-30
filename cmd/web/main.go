@@ -166,13 +166,10 @@ func home(c *gin.Context) {
 
 	now := time.Now().Format("2006年1月")
 
-	if page == 0 {
-		page = 1
-	}
 	if totalPage == 0 {
 		totalPage = 1
 	}
-
+	page++
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"now":         now,
 		"totalNum":    totalNum,
