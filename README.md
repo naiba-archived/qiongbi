@@ -1,4 +1,4 @@
-# 穷逼 ![构建状态](https://github.com/naiba/qiongbi/workflows/.github/workflows/docker.yml/badge.svg)
+# 穷逼 ![构建状态](https://github.com/naiba/qiongbi/workflows/Build%20Docker%20Image/badge.svg)
 
 :neckbeard: 穷逼捐赠系统，使用支付宝即时到账接口，前端来自另一个[穷逼](https://qiong.bi)。
 
@@ -30,4 +30,4 @@
         - Domain=example.com # 绑定的域名
     ```
 
-这边注意不要使用本仓库中构建的 image，本仓库中构建的 image 是我的支付宝网关专用的。
+   这边注意不要使用本仓库中构建的 image，本仓库中构建的 image 是我的支付宝网关专用的。
