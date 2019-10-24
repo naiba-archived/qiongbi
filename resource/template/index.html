@@ -82,7 +82,7 @@
         {{range .trades}}
         <li itemscope itemtype="http://schema.org/Person">
           <p class='info'>
-            <img itemprop="photo" src='https://gravatar.com/avatar/{{.Email|md5}}/100'>
+            <img itemprop="photo" src='https://gravatar.loli.net/avatar/{{.Email|md5}}/100'>
             <span class='fn' itemprop="name">{{.Name}}</span>于<time
               datetime='{{.UpdatedAt|ft}}'>{{.UpdatedAt|ft}}</time>向他捐赠<strong class='sum'>{{.Amount}}</strong>&yen;
           </p>
