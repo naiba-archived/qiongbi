@@ -1,13 +1,13 @@
-# 穷逼 ![构建状态](https://github.com/naiba/qiongbi/workflows/Build%20Docker%20Image/badge.svg)
+# 穷逼 ![构建状态](https://github.com/naiba/qiongbi/workflows/Build%20Private%20Image/badge.svg)
 
 :neckbeard: 穷逼捐赠系统，使用支付宝即时到账接口，前端来自另一个[穷逼](https://qiong.bi)。
 
 ## 食用指南
 
-1. 首先构建镜像
+1. 拉取镜像
 
     ```shell
-    docker build -t docker.pkg.github.com/naiba/qiongbi/web .
+    docker pull docker.pkg.github.com/naiba/dockerfiles/qiongbi
     ```
 
 2. 使用 `docker-compose.yml` 方式运行，方便
@@ -17,7 +17,7 @@
 
     services:
     db:
-        image: docker.pkg.github.com/naiba/qiongbi/web:latest
+        image: docker.pkg.github.com/naiba/dockerfiles/qiongbi:latest
         volumes:
         - ./data/:/qiongbi/data
         restart: always
@@ -29,7 +29,5 @@
         - PriKey=xxxxxx # 商户私钥
         - Domain=example.com # 绑定的域名
     ```
-
-   这边注意不要使用本仓库中构建的 image，本仓库中构建的 image 是我的支付宝网关专用的。
 
 3. 启动 `docker-compose up -d`，可以开始接受捐赠啦

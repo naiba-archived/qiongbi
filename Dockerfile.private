@@ -4,7 +4,11 @@ ARG GATEWAY=openapi.alipay.com/gateway.do
 COPY . .
 RUN apk --no-cache --no-progress add --virtual build-deps build-base git linux-pam-dev \
     && go mod tidy -v \
-    && go build -o app -ldflags="-s -w" cmd/web/main.go
+    && go mod vendor \
+    # 修改支付宝网关
+    && grep openapi.alipay.com -rl ./vendor/github.com/smartwalle/alipay|xargs sed -i "s~openapi.alipay.com/gateway.do~${GATEWAY}~g" \
+    && grep ${GATEWAY} -rl ./vendor/github.com/smartwalle/alipay \
+    && go build -mod=vendor -o app -ldflags="-s -w" cmd/web/main.go
 FROM alpine:latest
 RUN apk --no-cache --no-progress add \
     ca-certificates \

@@ -1,4 +1,4 @@
-name: Build Docker Image
+name: Build Private Image
 
 on: [push]
 
@@ -11,6 +11,6 @@ jobs:
         env:
           DockerPassword: ${{ secrets.PACKAGE_TOKEN }}
         run: |
-          docker build --no-cache --build-arg GATEWAY=pay.tf/pay/proc/new -t docker.pkg.github.com/naiba/dockerfiles/qiongbi .
+          docker build -f Dockerfile.private --no-cache --build-arg GATEWAY=pay.tf/pay/proc/new -t docker.pkg.github.com/naiba/qiongbi/web .
           docker login -u naiba -p $DockerPassword docker.pkg.github.com
-          docker push docker.pkg.github.com/naiba/dockerfiles/qiongbi
+          docker push docker.pkg.github.com/naiba/qiongbi/web
