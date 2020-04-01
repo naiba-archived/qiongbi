@@ -105,7 +105,7 @@ func donate(c *gin.Context) {
 	var p = alipay.AliPayTradePagePay{}
 	p.NotifyURL = "https://" + os.Getenv("Domain") + "/notify"
 	p.ReturnURL = "https://" + os.Getenv("Domain") + "/return"
-	p.Subject = t.Name + "捐赠" + t.Amount
+	p.Subject = "金额总计：" + t.Amount
 	p.OutTradeNo = fmt.Sprintf("%d", t.ID)
 	p.TotalAmount = t.Amount
 	u, err := pay.TradePagePay(p)
